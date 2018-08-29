@@ -1,0 +1,112 @@
+{extend name="base/base" /}
+{block name="title"}医生信息管理{/block}
+
+{block name="main"}
+<div class="container">
+    <div class="main_top">
+        <div id="table" class="mt10" id="editdiv">
+            <div class="main_left fl span10">
+                <div class="box pr0">
+                    <div class="box_border">
+                        <div class="box_top" style="background:#D8D8EB;">
+                            <div class="box_top_l fl" >
+                                <img src="__STATIC__/admin/images/icons/16.png" width="30" height="30" style="margin: 5px;">
+                                <font color="blue"><b id="yyunit"></b></font>
+                                <b class="pl0">医生管理配置&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                            </div>
+                        </div>
+                        <div class="box_top">
+                             <input type="button" name="addbut" id='addbut' onclick="Operation('add')" class="btn btn82 btn_add"  value="新增"> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form name="form1" class="jqtransform">
+                <div class="mt10" id="ajaxdiv">
+                    <div class="box_border">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table" style="font-size:0.9rem">
+                            <tr>    
+                                <th width="6%">医生名称</th>
+                                <th width="6%">预约名称</th>
+                                <th width="4%">前置字符</th>
+                                <th width="4%">起始号码</th>
+                                <th width="3%">启用</th>
+                                <th width="8%">预约时间</th>
+                                <th width="3%" title="每小时预约量">预约量</th>
+                                <th width="5%" title="可提前多少分钟取号">取号时间</th>
+                                <th width="14%">归属</th>
+                                <th width="8%">操作</th>
+                            </tr>
+                            {notempty name="lists"}
+                            {volist name="lists" id="list"}
+                            <tr class="tr td_center">                        
+                                <td>{$list.QueName}</td>
+                                <td>{$list.DispName}</td>
+                                <td>{$list.NoChar}</td>
+                                <td>{$list.StarNo}</td>
+                                <td>{$list.EnableFlag==1?'是':'否'}</td>
+                                <td>
+                                {$list.WorkTime1}-{$list.WorkTime2}<br>
+                                {$list.WorkTime3}-{$list.WorkTime4}</td>
+                                <td>{$list.HourSum}</td>
+                                <td>{$list.FetchTime}</td>
+	               				<td class="td_left">{$list.unitname} 》 {$list.HallName}</td>
+                                <td>
+                                    <a href="javascript:Operation('edit',{$list.QueId});">修改</a> 
+                                    |
+                                    <a href="javascript:Operation('del',{$list.QueId});">删除</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                			{else /}
+                            <tr class="tr">
+                                <td class="td_center" colspan="11">您还没有配置医生，请进行配置，谢谢！</td>
+                            </tr>
+                            {/notempty}
+                        </table>
+                    </div>
+                </div>
+            </form>
+            <!-- 分页开始 -->
+            <div class="page my_page">
+                <div class="pagination">{$page}</div>
+            </div>
+            <!-- 分页结束 -->            
+        </div>
+        <div id="table" class="mt10" id="editdiv">
+            <div class="box span10 oh">                     
+
+            </div>
+        </div> 
+
+    </div>
+</div> 
+
+<script type="text/javascript">
+// 增 删 改 相应操作
+function Operation(str,id) {
+    if(str=='add'){
+        location.href = '/index.php/admin/doctor/editDoctor';
+    }else{      
+        if(id==''||id==null){
+            alert("请选择相应的数据");
+        }else{      
+            if(str=='edit'){
+                location.href = '/index.php/admin/doctor/editDoctor/id/'+id;
+            }else if(str=='del'){
+                if(confirm("确认删除！")){
+                    $.post('/index.php/admin/doctor/doctorDel',
+                        {'id':id},
+                        function(data){
+                            if(data.success==1){
+                                location.reload();
+                            }
+                            alert(data.msg)
+                    },'json')
+                }
+            }
+        }
+    }
+}
+</script>
+{/block}

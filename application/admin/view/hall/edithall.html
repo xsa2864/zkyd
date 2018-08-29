@@ -1,0 +1,112 @@
+{extend name="base/base" /}
+{block name="title"}部门管理{/block}
+
+{block name="main"}
+<div class="container">
+    <div class="main_top">
+        <div id="forms" class="mt0">
+            <div class="box">
+                <div class="box_border">
+                    <div class="box_top"><b class="pl15">部门修改：</b></div>
+                    <div class="box_center">
+                    <form  name="form1" class="jqtransform">
+                        <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="td_right">
+                                    大厅全称：
+                                </td>
+                                <td>
+                                    <input type="text" name="hallname" id="hallname" class="input-text lh30" size="30" value="{$list['HallName']}">[必填]
+                                </td>
+                                <td class="td_right">预约名称：</td>
+                                <td>
+                                    <input type="text" name="dispname" id="dispname" class="input-text lh30" size="30" value="{$list['DispName']}">[必填]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td_right">介绍说明：</td>
+                                <td colspan="3"> <input type="text" name="synopsis" id="synopsis" class="input-text lh30" size="100%" value="{$list['AlternateField1']}"></td>  
+
+                            </tr>
+                            <tr>
+                                <td class="td_right">启用/暂停：</td>
+                                <td class="">                                 
+                                    <input type="radio" name="EnableFlag" {notempty name="list"}{if condition="$list.EnableFlag==1"}checked{/if}{else /}checked{/notempty} value="1"> 启用
+                                    &nbsp;
+                                    <input type="radio" name="EnableFlag" {if condition="$list.EnableFlag==0"}checked{/if} value="0"> 暂停
+                                </td>
+                                <td class="td_right">所属单位：</td>
+                                <td class=""> 
+                                    <span class="fl">
+                                        <div class="select_border"> 
+                                            <div class="select_containers "> 
+                                                <select name="UnitId" class="select"  style="width: 200px;"> 
+                                                <option value="0">请选择</option>      
+                                                {volist name="unit" id="un"} 
+                                                {$unitid=0}
+                                                {notempty name="list"}{$unitid=$list.UnitId}{/notempty}          
+                                                <option value="{$un.UnitId}" {if $un.UnitId==$unitid}selected
+                                                    {/if}>{$un.unitname}</option>
+                                                {/volist}
+                                                </select> 
+                                            </div> 
+                                        </div> 
+                                    </span>
+                                </td>
+                            </tr>
+                        <tr>
+                        <td class="td_right">上午起始：</td>
+                        <td>   
+                            <input type="time" name="stime1" class="select" value="{notempty name='list'}{$list.WorkTime1}{else /}09:00{/notempty}">[时-分，必填]
+                        </td>
+                        <td class="td_right">上午结束：</td>
+                        <td>
+                            <input type="time" name="etime1" class="select" value="{notempty name='list'}{$list.WorkTime2}{else /}12:00{/notempty}">[时-分，必填]
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_right">下午起始：</td>
+                        <td>
+                            <input type="time" name="stime2" class="select" value="{notempty name='list'}{$list.WorkTime3}{else /}14:00{/notempty}">[时-分，必填]
+                        </td>
+                        <td class="td_right">下午结束：</td>
+                        <td>
+                            <input type="time" name="etime2" class="select" value="{notempty name='list'}{$list.WorkTime4}{else /}18:00{/notempty}">[时-分，必填]
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_right">可预约天数：</td>
+                        <td>                                               
+                            <input type="number" name="Despeak_Part" class="input-text lh30" value="{notempty name='list'}{$list.Despeak_Part}{else /}1{/notempty}">
+                        </td>   
+                        <td class="td_right">接口标识：</td>
+                        <td> 
+                            <input type="text"  value="" name="intfaces" id="intfaces" class="input-text lh30" size="30">
+                        </td>  
+                    </tr>
+                </table>
+                    <div class="box_top" style="text-align: center;">
+                        <input type="hidden" name="hallno" value="{$list['HallNo']?$list['HallNo']:0}">
+                        <input type="button" name="button" class="btn btn82 btn_save2" value="保存" onclick="save()" style="margin-right: 20px;"> 		
+                        <input type="button" name="button" class="btn btn82 btn_nochecked" onclick="history.back(-1);" value="取消"> 
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+function save() {
+    $.post('/index.php/admin/hall/saveHall',
+        $("form").serialize(),
+        function(data){
+            if(data.success==1){
+                location.reload();
+            }
+            alert(data.msg)
+        },'json')
+}
+</script>
+{/block}

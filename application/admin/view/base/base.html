@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>{block name="title"}中科易达Q5预约排队叫号管理平台{/block}</title>
+<link rel="stylesheet" href="__STATIC__/admin/css/common.css">
+<link rel="stylesheet" href="__STATIC__/admin/css/style.css">
+<link rel="stylesheet" href="__STATIC__/admin/css/main.css">
+<script type="text/javascript" src="__STATIC__/admin/js/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/admin/js/jquery.SuperSlide.js"></script>
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script type="text/javascript">
+    $(function () {
+       $(".sideMenu").slide({  //这是一个JQuery插件
+            titCell: "h3", //- 自定义标题标签, 支持选择符
+            targetCell: "ul", //
+            defaultIndex: 0, //默认选中的标签索引从0开始
+            effect: 'slideDown',
+            delayTime: '500',
+            trigger: 'click', //滑动触发方式. 默认为click, 可选择mouseover
+            triggerTime: '150', //
+            defaultPlay: true, //
+            returnDefault: false, //
+            easing: 'easeInQuint', //
+            endFun: function () {       //
+                // scrollWW();
+            }
+        });
+
+        /*
+         * defaultIndex  - 默认选中的标签索引从0开始
+         * titOnClassName - 标签选中时的样式
+         * titCell   - 自定义标题标签, 支持选择符
+         * mainCell   - 自定义标题标签, 支持选择符
+         * delayTime  - 延迟触发时间. 当这个时间小于切换动画效果时间时, 动画将被禁用
+         * interTime  - 自动切换时间. 当这个时间大于0时, 标签将定时自动切换
+         * trigger   - 滑动触发方式. 默认为click, 可选择mouseover
+         * effect   - 切换动画. 默认不使用动画. 目前仅提供fade(淡出), slide(向下展开)两种
+         * omitLinks - 是否忽略带链接标签，默认为否
+         这是个jquery的插件
+         */
+        $("li").click(function () {
+            $("li").attr({"class": ""});  //改变CSS样式
+            $(this).attr({"class": "on"});
+            var attrid = $(this).attr("attrid");
+            sessionStorage.setItem("menu_key", attrid);
+        });
+        $("h3").click(function (n,e) {
+            $("ul").hide();
+            $($(this).parent()[0]).find("ul").toggle();
+        });
+        onId();
+    });
+    function scrollWW() {        
+            if ($(".side").height() < $(".sideMenu").height()) {
+                $(".scroll").show();
+                var pos = $(".sideMenu ul:visible").position().top - 38;
+                $('.sideMenu').animate({top: -pos});
+            } else {
+                $(".scroll").hide();
+                $('.sideMenu').animate({top: 0});
+                n = 1;
+            }
+    }
+
+    var n = 1;
+    function menuScroll(num) {
+        var Scroll = $('.sideMenu');
+        var ScrollP = $('.sideMenu').position();
+        /*alert(n);
+         alert(ScrollP.top);*/
+        if (num == 1) {
+            Scroll.animate({top: ScrollP.top - 38});
+            n = n + 1;
+        } else {
+            if (ScrollP.top > -38 && ScrollP.top != 0) {
+                ScrollP.top = -38;
+            }
+            if (ScrollP.top < 0) {
+                Scroll.animate({top: 38 + ScrollP.top});
+            } else {
+                n = 1;
+            }
+            if (n > 1) {
+                n = n - 1;
+            }
+        }
+    }
+// 跳转
+function gourl(url,id){
+    sessionStorage.setItem("onId", id);
+    location.href = '/'+url;
+}
+function onId(){
+    var id = sessionStorage.getItem("onId");
+    if(id){ 
+        $("li").each(function(n,e){
+            if($(e).attr("attrid")==id){                
+                $(e).attr("class",'on');
+                $($(e).parent().parent()).find("h3").click();
+            }
+        })
+    }else{
+        scrollWW();
+    }
+}
+//退出
+function logout(){
+    $.post('/index.php/admin/index/logout',
+        function(data){
+            alert(data.msg);
+            location.href = '/index.php/admin/login/index';
+    },'json')
+}
+
+</script>
+</head>
+<body>
+    <div class="top">
+        <div id="top_t">
+            <div id="logo" class="fl"></div>
+            <div id="photo_info" class="fr">
+                <div id="photo" class="fl">
+                    <a href="#"><img src="__STATIC__/admin/images/a.png" alt="" width="60" height="60"></a>
+                </div>
+                <div id="base_info" class="fr">
+                    <div class="help_info">
+                        <a href="" id="hp">&nbsp;</a> 
+                        <a href="" id="gy">&nbsp;</a> 
+                        <a href="javascript:logout()" id="out">&nbsp;</a>
+                    </div>
+                    <div class="info_center">{$user.FullName} &nbsp; {$title}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="side_here">
+            <div id="side_here_l" class="fl"></div>
+            <div id="button" class="mt12">
+                <input type="button" name="button" class="btn btn82 btn_count"       onclick="location.href='/index.php/admin/appointment/listdata'" style="margin-top:5px;" value="查询"> 
+                <input type="button" name="button" class="btn btn82 btn_checked" onclick="location.href='/index.php/admin/appointment/registration'" style="margin-top:5px;" value="预约"> 
+            </div>
+            <div id="here_area" class="fl">
+                <h4 class="fl" id="address1">当前位置：数据库链接<h4>
+            </div>
+        </div>
+        </div>
+        <div class="side" id="demo">
+            <div class="sideMenu" style="margin: 0 auto" id="">
+            {volist name="listmenu" id="vo"}
+                <div id="{$vo.id}">                    
+                    <h3>{$vo.title}</h3>
+                    {notempty name="$vo.child"}
+                        <ul>
+                        {volist name="$vo.child" id="vd"}  
+                        <li onclick="gourl('{$vd.name}',{$vd.id})" attrid="{$vd.id}">{$vd.title}</li>
+                        {/volist} 
+                        </ul>
+                    {/notempty}
+                </div>
+            {/volist}
+            </div>
+        </div>
+    <div class="main">
+        {block name="main"}Welcome{/block}
+    </div>
+    <div class="bottom">
+        <div id="bottom_bg" >福州中科易达计算机技术有限公司版权所有 服务电话：0591-87563369</div>
+    </div>
+</body>
+</html>
+
+
