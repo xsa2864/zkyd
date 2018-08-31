@@ -18,7 +18,7 @@
 }
 </style>
 <script type="text/javascript">
-// 选择专家
+// 选择专家  
 function check(id,name){
     $("#hallno").val(id);
     $("#hallname").val(name);
@@ -50,8 +50,9 @@ function checkdata(queid,name,hallno){
                 var ndata = arr.data;
                 var c_num = arr.data_n;
                 var all_num = arr.all_num;
+                var week = arr.date_week
                 for( x in ndata){                    
-                    str += '<input type="button" name="dates" id="dates" class="ext_btn ext_btn_submit cs_date" onclick="checktime(\''+ndata[x]+'\')" value="'+ndata[x]+'  '+c_num[x]+'/'+all_num+'"/> ';
+                    str += '<input type="button" name="dates" id="dates" class="ext_btn ext_btn_submit cs_date" onclick="checktime(\''+ndata[x]+'\')" value="'+ndata[x]+'  '+c_num[x]+'/'+all_num+'  周'+week[x]+'"/> ';
                 }
             }else{
                 str += '没有信息';
@@ -62,10 +63,10 @@ function checkdata(queid,name,hallno){
 }
 // 选择时间
 function checktime(ndata){
-    var hallno = $("#hallno").val();
+    var queid = $("#queid").val();
     $("#date1").val(ndata);
     $.post('/index.php/admin/appointment/getCheckTime',
-        {'ndata':ndata,'hallno':hallno},
+        {'ndata':ndata,'queid':queid},
         function(data){
             var str = '<table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table"><tr><td>';
             if(data.success==1){
@@ -116,7 +117,7 @@ function addDespeak(){
                     str +='</tr></table>';
                     $("#yydiv").html(str);
             }else{
-                alert("data.msg");
+                alert(data.msg);
             }
         },'json')
 }
@@ -240,16 +241,6 @@ function addDespeak(){
         </td>
     </tr>
 </table>
-                </div>
-                <div class="box span10 oh" hidden>  <!--录入人信息-->
-                    <input type="hidden" name="unitId" value="0">
-                    <input type="hidden" name="inclerkid" value="">
-                    <input type="hidden" name="inclerkname" value="">
-                    <input type="hidden" name="inclerkfull" value="">
-                    <input type="hidden" name="inunitid" value="">
-                    <input type="hidden" name="inunitname" value="">
-                    <input type="hidden" name="indeptid" value="">
-                    <input type="hidden" name="indeptname" value="">
                 </div>
             </form>   
         </div>

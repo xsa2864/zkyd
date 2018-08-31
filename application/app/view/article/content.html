@@ -4,24 +4,11 @@
 <header class='demos-header'>
 </header>
 <article class="weui-article">
-  <h1>福州市眼科医院</h1>
+  <h1>{$result.title}</h1>
   <section>
     <section>
-      <h3>1.1 福州眼科医院是福建省市医保、新农合定点眼科医院。</h3>
-      <p>{$content}</p>
-      <p>
-        <img src="__APP__/images/pic_article.png" alt="">
-        <img src="__APP__/images/pic_article.png" alt="">
-      </p>
-    </section>
-    <section>
-      <h3>1.2 预约排队注意事项</h3>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+      <h3>{$result.subtitle}</h3>
+      {$result.content}
     </section>
   </section>
 </article>

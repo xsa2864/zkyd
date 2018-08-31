@@ -113,6 +113,7 @@ function logout(){
 }
 
 </script>
+{block name="js"}{/block}
 </head>
 <body>
     <div class="top">
@@ -139,9 +140,6 @@ function logout(){
                 <input type="button" name="button" class="btn btn82 btn_count"       onclick="location.href='/index.php/admin/appointment/listdata'" style="margin-top:5px;" value="查询"> 
                 <input type="button" name="button" class="btn btn82 btn_checked" onclick="location.href='/index.php/admin/appointment/registration'" style="margin-top:5px;" value="预约"> 
             </div>
-            <div id="here_area" class="fl">
-                <h4 class="fl" id="address1">当前位置：数据库链接<h4>
-            </div>
         </div>
         </div>
         <div class="side" id="demo">
@@ -166,6 +164,11 @@ function logout(){
     <div class="bottom">
         <div id="bottom_bg" >福州中科易达计算机技术有限公司版权所有 服务电话：0591-87563369</div>
     </div>
+    <style type="text/css">
+    .container{
+        padding: 0 1px;
+    }
+    </style>
 </body>
 </html>
 

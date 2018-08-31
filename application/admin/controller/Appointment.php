@@ -167,6 +167,7 @@ class Appointment extends Base
     }
     // 预约记录
     public function registration(){
+        
         $where = array();
         if($this->userid!=1){
             $where['UnitId'] = $this->unitid;
@@ -207,6 +208,7 @@ class Appointment extends Base
             Loader::import("own/Work", EXTEND_PATH);
             $work=new \Work();
             $data = $work->checktime($result);
+
             // $data = $this->checktime($result);
             if($result){
                 $re_msg['success'] = 1;
@@ -222,9 +224,9 @@ class Appointment extends Base
         $data = array();
         if (Request::instance()->isPost())
         {
-            $hallno = input('hallno',0);
+            $queid = input('queid',0);
             $ndata = input('ndata','');
-            $result = db("serque")->where("HallNo",$hallno)->find();
+            $result = db("serque")->where("QueId",$queid)->find();
             // 获取上班时间
             Loader::import("own/Work", EXTEND_PATH);
             $work=new \Work();
@@ -257,6 +259,7 @@ class Appointment extends Base
         $data['inTime']      = date("Y-m-d",time());
         $data['addtime']     = time();
         $data['unitId']      = $this->unitid;
+        $data['manager_id']  = $this->userid;
         $where = array(
             'idcard'    =>$data['idcard'],
             'hallNo'    =>$data['hallNo'],
@@ -264,6 +267,7 @@ class Appointment extends Base
             );
         $result = db("despeak")->where($where)->find();
         if(empty($result)){
+            $data['platform'] = $this->get_platform();
             $id = db("despeak")->insertGetId($data);
             if($id){
                 $re_msg['success'] = 1;
