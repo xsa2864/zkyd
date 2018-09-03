@@ -16,6 +16,15 @@ class Appointment extends Base
     public function listdata()
     {
         // 模板输出
+        // $where = array();
+        // if($this->userid!=1){
+        //     $where['d.unitId'] = $this->unitid;
+        // }
+        // $result = db("despeak")->alias("d")
+        //             ->field("d.*,h.HallName,s.QueName")
+        //             ->join("hall h","h.HallNo=d.hallNo",'LEFT')
+        //             ->join("serque s","s.QueId=d.queId",'LEFT')
+        //             ->where($where)->select();
         return $this->fetch('listdata');
     }
     // 查询数据
@@ -82,10 +91,10 @@ class Appointment extends Base
             $where['d.idcard'] = ['like','%'.$idcards.'%'];
         }
         if(!empty($hallname)){
-            $where['d.HallName'] = ['like','%'.trim($hallname).'%'];
+            $where['h.HallName'] = ['like','%'.trim($hallname).'%'];
         }
         if(!empty($quename)){
-            $where['d.QueName'] = ['like','%'.trim($quename).'%'];
+            $where['s.QueName'] = ['like','%'.trim($quename).'%'];
         }
         if(!empty($stime)){
             $where['d.addtime'] = ['>=',strtotime($stime)];

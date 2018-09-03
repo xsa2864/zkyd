@@ -26,6 +26,10 @@ class Login extends Controller
      */
     public function index()
     {
+        $info = Session::get('user');
+        if($info){
+            $this->redirect('admin/appointment/listunit');
+        }
         return $this->fetch('login');
     }
 

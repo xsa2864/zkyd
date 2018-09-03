@@ -6,7 +6,7 @@
     <div class="box">
     <form>
         <div class="box_border">
-            <div class="box_top"><b class="pl15">搜索</b></div>
+            <div class="box_top"><b class="pl15">日志</b></div>
             <div class="box_center pt10 pb10">
                 <table class="form_table" border="0" cellpadding="0" cellspacing="0">
                 <tr>
@@ -38,18 +38,30 @@
         <table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table" style="font-size: 1rem;">
             <tr>
                <th width="50">ID</th>
-               <th width="18%">单位名称</th>
-               <th width="18%">接收手机号</th>
+               <th width="12%">单位名称</th>
+               <th width="10%">接收手机号</th>
+               <th width="7%">签名</th>
+               <th width="8%">模版CODE</th>
                <th>内容</th>
-               <th width="20%">发送时间</th>
+               <th width="80">状态</th>
+               <th width="13%">发送时间</th>
+               <th width="12%">操作</th>
             </tr>
             {volist name="list" id="vo"}
             <tr class="tr td_center">
                <td>{$vo.id}</td>
                <td>{$vo.unitname|default="无"}</td>
                <td>{$vo.mobile}</td>
+               <td>{$vo.sign}</td>
+               <td>{$vo.temp}</td>
                <td>{$vo.content}</td>
+               <td>{if condition="$vo.status==1"}已发送{else /}未发送{/if}</td>
                <td>{:date("Y-m-d H:i",$vo.addtime)}</td>
+               <td>
+               {if condition="$vo.status==0"}
+                   <a href="javascript:reSend({$vo.id});">发送短信</a>
+                {/if}
+               </td>
             </tr>
             {/volist}
         </table>
@@ -61,6 +73,17 @@
     </div>
 </div>
 <script type="text/javascript">
-
+function reSend(id) {
+    if(confirm("确定发送!")){
+        $.post('{:url("admin/sms/reSend")}',
+            {'id':id},
+            function(data){
+                if(data.success==1){
+                    location.reload();
+                }   
+                alert(data.msg);
+            },'json')
+    }
+}
 </script>
 {/block}

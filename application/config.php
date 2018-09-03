@@ -236,4 +236,11 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+    // 短信参数
+    'sms'           => [
+        'accessKeyId'     => 'LTAIYwaTxyyPebIL',
+        'accessKeySecret' => 'aJrng5IX29JXgORJzAWYqHV0Rr7f98',
+        'signName'        => '中科易达',
+        'templateCode'    => 'SMS_137820001',
+    ]
 ];

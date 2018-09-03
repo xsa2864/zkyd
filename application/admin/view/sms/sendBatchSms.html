@@ -1,0 +1,66 @@
+{extend name="base/base" /}
+{block name="title"}批量发送短信{/block}
+
+{block name="main"}
+<div id="forms" class="mt10">
+    <div class="box">
+          <div class="box_border">
+            <div class="box_top"><b class="pl15">批量发送短信</b></div>
+            <div class="box_center">
+              <form action="" class="jqtransform">
+               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="td_right">模版CODE：</td>
+                  <td class=""> 
+                    <input type="text" name="code" id="code" class="input-text lh30" size="40" placeholder="SMS_137780004">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td_right">短信签名：</td>
+                  <td><input type="text" name="sign" id="sign" class="input-text lh30" size="40" value="中科易达"></td>
+                </tr>
+                <tr>
+                    <td class="td_right">手机号码：</td>
+                    <td class="">
+                        <textarea name="mobile" id="mobile" cols="30" rows="10" class="textarea"></textarea>
+                        格式：15377776666,15377776666(英文字符逗号,上限为100)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td_right">发送的内容：</td>
+                    <td class="">
+                    <textarea name="content" id="content" cols="30" rows="10" class="textarea"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td_right">&nbsp;</td>
+                    <td class="">
+                        <input type="button" name="button" onclick="sendSms()" class="btn btn82 btn_save2" value="发送"> 
+                        <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
+                    </td>
+                </tr>
+               </table>
+               </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+function sendSms() {
+    var mobile = $("#mobile").val();
+    var content = $("#content").val();
+    var code = $("#code").val();
+    var sign = $("#sign").val();
+    if(confirm("确定发送!")){
+        $.post("{:url('admin/sms/sendSms')}",
+            {'mobile':mobile,'content':content,'code':code,'sign':sign},
+            function(data){
+                if(data.success==1){
+                    $("#mobile").val('');
+                }   
+                alert(data.msg)
+            },'json')
+    }
+}
+</script>
+{/block}

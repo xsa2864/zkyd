@@ -78,14 +78,14 @@ class Doctor extends Base
 	    	$flag = db("serque")->where("QueId",$queid)->update($data);
             if($flag){
                 $re_msg['success'] = 2;
-                $re_msg['msg'] = '更新成添';
+                $re_msg['msg'] = '更新成功';
             }
 	    }else{
 	    	$data['InTime'] = date("Y-m-d H:i:s",time());
 	    	$flag = db("serque")->insert($data);
     	    if($flag){
     	    	$re_msg['success'] = 1;
-            	$re_msg['msg'] = '加成功功';
+            	$re_msg['msg'] = '添加成功';
     	    }
         }
 	    echo json_encode($re_msg);
