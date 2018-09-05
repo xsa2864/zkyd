@@ -10,7 +10,7 @@ class Article extends Controller
     {
         $id = input("id",1);
         $result = db("article")->where("id=$id")->find();
-        $this->assign("Subtitle","详细内容");
+        $this->assign("Subtitle","内容详情");
     	$this->assign("result",$result);
         return $this->fetch('content');
     }
@@ -22,7 +22,7 @@ class Article extends Controller
     	}
     	$where['status'] = 1;
     	$list = db("article")->where($where)->order("addtime desc")->select();
-    	$this->assign("Subtitle","文章列表");
+    	$this->assign("Subtitle","新闻列表");
     	$this->assign("list",$list);
     	return $this->fetch('articleList');
     }

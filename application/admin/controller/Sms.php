@@ -60,7 +60,15 @@ class Sms extends Base
     }
     // 删除配置
     public function smsDel(){
-
+        $re_msg['success'] = 0;
+        $re_msg['msg'] = '删除失败';
+        $id = input("id",0);
+        $rs = db("sms_config")->where("id",$id)->delete();
+        if($rs){
+            $re_msg['success'] = 1;
+            $re_msg['msg'] = '删除成功';
+        }
+        echo json_encode($re_msg);
     }
     // 短信日志
     public function smsLog(){
@@ -203,18 +211,27 @@ class Sms extends Base
         echo json_encode($re_msg);
     }
     // 单个发送短信
-    public function test(){ 
-        $mobile = input("mobile",'17095989111');       
+    public function send(){ 
+        $sms = Loader::model('SmsModel');
+        $mobile = input("mobile",'17095989213');       
+        $sms->remind_sms(3,$mobile);
+        exit;
         //获取对象，如果上面没有引入命名空间，可以这样实例化：$sms = new \alisms\SendSms()
         $sms = new SendSms();
         //$mobile为手机号
-        $signName = '中科易达';
+        $signName = '福州总院';
         $templateCode = 'SMS_137780004';
 
         //模板参数，自定义了随机数，你可以在这里保存在缓存或者cookie等设置有效期以便逻辑发送后用户使用后的逻辑处理
         $code = mt_rand();
         $templateParam = array("code"=>$code);
         $m = $sms::sendSms($mobile,$signName,$templateCode,$templateParam);
+        print_r($m);
+        // $m = array(
+        //     "Message" => 'OK' ,
+        //     "RequestId" => '5CEF9808-8C24-4700-B74D-2A9DAF0096A8' ,
+        //     "BizId" => '496524036029272812^0',
+        //     "Code" => 'OK' );
         //类中有说明，默认返回的数组格式，如果需要json，在自行修改类，或者在这里将$m转换后在输出
         $data = array();
         $rs = 0;

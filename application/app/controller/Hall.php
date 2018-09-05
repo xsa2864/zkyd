@@ -12,26 +12,55 @@ class Hall extends Common
 	// 医院列表
     public function list()
     {
+        $unitid = input("unitid",0);
         $pageNum = 10;
-        $list = db("hall")->page(1,$pageNum)->select();
-        $num = db('serque')->count();
-    	$more = $num>$pageNum?1:'没有更多数据了';
-    	$this->assign("more",$more);
-        $this->assign("list",$list);
-    	$this->assign("Subtitle","就诊科室");
-        return $this->fetch('list');
+        $where = array();
+        if($unitid){
+            $where['UnitId'] = $unitid;
+            $list = db("hall")->where($where)->page(1,$pageNum)->select();
+            $num = db('hall')->where($where)->count();
+    	    $this->assign("Subtitle","预约科室列表");
+            $more = $num>$pageNum?1:'没有更多数据了';
+            $this->assign("more",$more);
+            $this->assign("list",$list);
+            return $this->fetch('list');
+        }else{
+            $where['EnableFlag'] = 1;
+            $list = db("unit")->where($where)->page(1,$pageNum)->select();
+            $num = db('unit')->where($where)->count();
+            $this->assign("Subtitle","预约医院列表");
+            $more = $num>$pageNum?1:'没有更多数据了';
+            $this->assign("more",$more);
+            $this->assign("list",$list);
+            return $this->fetch('unitList');
+        }
     }
-    // 获取更多医院列表
+    // 获取更多医院列表  
     public function more_list(){
     	$re_msg['success'] = 0;
         $re_msg['msg'] = '没有更多数据了';
 
-    	$page = input("page",1);
-    	$pageNum = 10;
-    	$num = db('hall')->count();
+        $unitid = input("unitid",0);
+        $where = array();
+        if($unitid){
+            $where['UnitId'] = $unitid;
+        } 
+        $where['EnableFlag'] = 1;
+        $page = input("page",1);
+        $pageNum = 10;
+        if($unitid){
+            $num = db('hall')->where($where)->count();
+        }else{
+            $num = db('unit')->where($where)->count();
+        }
+    	
     	$flag = $num - ($page-1)*$pageNum;
     	if($flag>0){
-    		$list = db("hall")->page($page,$pageNum)->select();
+            if($unitid){
+    		    $list = db("hall")->where($where)->page($page,$pageNum)->select();
+            }else{
+                $list = db("unit")->where($where)->page($page,$pageNum)->select();
+            }
     		if($list){
     			$re_msg['success'] = 1;
        			$re_msg['msg'] = $list;
@@ -117,7 +146,8 @@ class Hall extends Common
         $re_msg['msg'] = '预约失败';
     	$data['idcard'] = input("idcard","");
 	    $data['mobile'] = input("mobile","");
-	    $data['despeakDate'] = input("mktime","");
+	    $data['despeakDate'] = input("mktime",0);
+        $data['despeakTime'] = strtotime($data['despeakDate']);
 	    $radio1 = input("radio1","");
 	    $data['time_Part_S'] = '';
 		$data['time_Part_O'] = '';
@@ -126,7 +156,7 @@ class Hall extends Common
 	    	$data['time_Part_S'] = $ra[0].":00";
 	    	$data['time_Part_O'] = $ra[1].":00";
 	    }
-	    
+	    $data['unitId'] = input("unitId",0);
 	    $data['queId'] = input("QueId",0);
 	    $data['hallNo'] = input("HallNo",0);
 	    $data['inTime'] = date("Y-m-d H:i:s",time());
@@ -150,6 +180,9 @@ class Hall extends Common
 			    	$re_msg['success'] = 1;
 		        	$re_msg['msg'] = '预约成功';
                     $re_msg['id'] = $rs;
+                    // 短信推送
+                    $sms = Loader::model('admin/SmsModel');    
+                    $sms->remind_sms($data['unitId'],$data['mobile']);
 			    }
 			}
 		}
@@ -191,21 +224,23 @@ class Hall extends Common
         if(!empty($mobile)){
             $where['d.mobile'] = $mobile;
         }
-        if(!empty($status)){
-            $where['d.status'] = $status;
-        }
         if(!empty($where)){
+            if(!empty($status)){
+                $where['d.status'] = $status;
+            }
+            $where['d.addtime'] = ['>',strtotime("-1 month",time())];
+            
             $result = db("despeak")->alias("d")
                     ->field("d.*,h.HallName,s.QueName")
                     ->join("hall h","h.HallNo=d.hallNo",'LEFT')
                     ->join("serque s","s.QueId=d.queId",'LEFT')
                     ->order('d.despeak_id desc')
                     ->where($where)->select();  
+            if($result){
+                $re_msg['success']  = 1;
+                $re_msg['msg']      = $result;
+            } 
         }
-        if($result){
-            $re_msg['success']  = 1;
-            $re_msg['msg']      = $result;
-        } 
         echo json_encode($re_msg);
     }
     // 取消预约

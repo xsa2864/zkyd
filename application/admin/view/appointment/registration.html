@@ -18,6 +18,12 @@
 }
 </style>
 <script type="text/javascript">
+// $(function(){
+
+// $("input[type='button']").on('click',function(){    
+//     $(this).attr("class","ext_btn ext_btn_success dept");
+// })
+// })
 // 选择专家  
 function check(id,name){
     $("#hallno").val(id);
@@ -34,8 +40,21 @@ function check(id,name){
                 str += '没有信息';
             }
             str += "</td></tr></table>";
-            $("#doctordiv").html(str);                
+            $("#doctordiv").html(str);  
+            reset1();    
+            reset2();             
         },'json')
+}
+function reset1(){
+    $("#queid").val('');
+    $("#quename").val('');     
+    $("#datediv").html(''); 
+    rhide();
+}
+function reset2(){ 
+    $("#date1").val('');   
+    $("#timediv").html(''); 
+    rhide(); 
 }
 // 选择日期
 function checkdata(queid,name,hallno){
@@ -58,7 +77,8 @@ function checkdata(queid,name,hallno){
                 str += '没有信息';
             }
             str += "</td></tr></table>";
-            $("#datediv").html(str);                
+            $("#datediv").html(str);
+            reset2();                
         },'json')
 }
 // 选择时间
@@ -87,6 +107,11 @@ function checktime(ndata){
 function show(str){
     $("#time1").val(str);
     $("#yydiv").show();
+}
+// 隐藏录入
+function rhide(){
+    $("#time1").val('');
+    $("#yydiv").hide();
 }
 // 添加预约
 function addDespeak(){

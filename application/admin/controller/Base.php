@@ -60,7 +60,7 @@ class Base extends Controller
         $data = array();
         foreach ($arr as $key => $value) {
             if($value['pid']==$pid){
-                $value['checked'] = (in_array($value['id'], $check)||$this->userid==1)?1:0;
+                $value['checked'] = in_array($value['id'], $check)?1:0;
                 $value['child'] = $this->getc_Rule($arr,$value['id'],$check);
                 $data[] = $value;
             }

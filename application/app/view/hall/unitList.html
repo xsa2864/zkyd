@@ -8,7 +8,7 @@
       {volist name="list" id="vo"}
       <a href="{:url('/app/hall/list/unitid/'.$vo.UnitId)}" class="weui-media-box weui-media-box_appmsg">
         <div class="weui-media-box__hd">
-          <img class="weui-media-box__thumb" src="__APP__/images/icon_nav_panel.png" alt="">
+          <img class="weui-media-box__thumb" src="__APP__/images/icon_nav_city.png" alt="">
         </div>
         <div class="weui-media-box__bd">
           <h4 class="weui-media-box__title">{$vo.unitname}</h4>
@@ -51,7 +51,7 @@ function more_list(){
         for(x in da){
           str += '<a href="{:url("/app/hall/list/unitid/'+da[x].UnitId+'")}" class="weui-media-box weui-media-box_appmsg">';
           str += '  <div class="weui-media-box__hd">';
-          str += '    <img class="weui-media-box__thumb" src="__APP__/images/icon_nav_panel.png" alt="">';
+          str += '    <img class="weui-media-box__thumb" src="__APP__/images/icon_nav_city.png" alt="">';
           str += '  </div>';
           str += '  <div class="weui-media-box__bd">';
           str += '    <h4 class="weui-media-box__title">'+da[x].unitname+'</h4>';

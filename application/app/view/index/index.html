@@ -28,9 +28,13 @@
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
           <!-- Slides -->
-          <div class="swiper-slide"><img src="__APP__/images/main.png" /></div>
-          <div class="swiper-slide"><img src="__APP__/images/main.png" /></div>
-          <div class="swiper-slide"><img src="__APP__/images/main.png" /></div>
+          {volist name="list1" id="vo"}
+          <div class="swiper-slide">
+          <a href="{$vo.url?$vo.url:'javascript:;'}">
+          <img src="__IMG__/{$vo.img}" height="230" />
+          </a>
+          </div>
+          {/volist}
         </div>
         <!-- If we need pagination -->
         <div class="swiper-pagination"></div>
@@ -77,7 +81,7 @@
         </div>
         <p class="weui-grid__label">关于我们</p>
       </a>
-      <a href="javascript:;" class="weui-grid js_grid">
+      <a href="javascript:;" class="weui-grid js_grid" style="display: none;">
         <div class="weui-grid__icon">
           <img src="__APP__/images/icon_nav_new.png" alt="">
         </div>
@@ -85,7 +89,7 @@
           待开发
         </p>
       </a>
-      <a href="javascript:;" class="weui-grid js_grid">
+      <a href="javascript:;" class="weui-grid js_grid" style="display: none;">
         <div class="weui-grid__icon">
           <img src="__APP__/images/icon_nav_new.png" alt="">
         </div>
@@ -103,11 +107,27 @@
       </a>
     </div>
 
+    <div class="swiper-container">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          {volist name="list2" id="vi"}
+          <div class="swiper-slide">
+          <a href="{$vi.url?$vi.url:'javascript:;'}">
+          <img src="__IMG__/{$vi.img}" height="180" />
+          </a>
+          </div>
+          {/volist}
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+
 <div class="weui-footer">
   <p class="weui-footer__links">
-    <a href="http://jqweui.com" class="weui-footer__link">福州中科易达计算机技术有限公司</a>
+    <a href="http://www.zkyd.com" class="weui-footer__link">福州中科易达计算机技术有限公司 0591-87563369</a>
   </p>
-  <p class="weui-footer__text">Copyright © 2016 jqweui.io</p>
+  <p class="weui-footer__text">Copyright © 2018 zkyd.com</p>
 </div>
 
 <style>

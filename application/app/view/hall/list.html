@@ -49,7 +49,7 @@ function more_list(){
         var da = data.msg;
         var str = '';
         for(x in da){
-          str += '<a href="{:url("/app/hall/getDoctor/id/")}" class="weui-media-box weui-media-box_appmsg">';
+          str += '<a href="{:url("/app/hall/getDoctor/id/'+da[x].HallNo+'")}" class="weui-media-box weui-media-box_appmsg">';
           str += '  <div class="weui-media-box__hd">';
           str += '    <img class="weui-media-box__thumb" src="__APP__/images/icon_nav_panel.png" alt="">';
           str += '  </div>';

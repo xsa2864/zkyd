@@ -73,7 +73,7 @@ class Appointment extends Base
         $re_msg['success'] = 0;
         $re_msg['msg'] = '未查询到数据';
         $idcards    = isset($arr['idcards'])?$arr['idcards']:'';
-        $mobile    = isset($arr['bodnums'])?$arr['bodnums']:'';
+        $mobile     = isset($arr['bodnums'])?$arr['bodnums']:'';
         $hallname   = isset($arr['hallname'])?$arr['hallname']:'';
         $quename    = isset($arr['quename'])?$arr['quename']:'';
         $stime      = isset($arr['stime'])?$arr['stime']:'';
@@ -85,7 +85,7 @@ class Appointment extends Base
             $where['d.unitId'] = $this->unitid;
         }
         if(!empty($mobile)){
-            $where['d.mobile'] = $mobile;
+            $where['d.mobile'] = ['like','%'.$mobile.'%'];
         }
         if(!empty($idcards)){
             $where['d.idcard'] = ['like','%'.$idcards.'%'];
@@ -97,11 +97,11 @@ class Appointment extends Base
             $where['s.QueName'] = ['like','%'.trim($quename).'%'];
         }
         if(!empty($stime)){
-            $where['d.addtime'] = ['>=',strtotime($stime)];
+            $where['d.despeakTime'] = ['>=',strtotime($stime)];
         }elseif (!empty($etime)) {
-           $where['d.addtime'] = ['<',strtotime($etime)];
+           $where['d.despeakTime'] = ['<',strtotime($etime)];
         }elseif (!empty($stime) && !empty($etime)) {
-            $where['d.addtime'] = ['between time',[strtotime($stime),strtotime($etime)]];
+            $where['d.despeakTime'] = ['between time',[strtotime($stime),strtotime($etime)]];
         }
 
         if(!empty($where)){
@@ -109,6 +109,7 @@ class Appointment extends Base
                     ->field("d.*,h.HallName,s.QueName")
                     ->join("hall h","h.HallNo=d.hallNo",'LEFT')
                     ->join("serque s","s.QueId=d.queId",'LEFT')
+                    ->order("d.addtime desc")
                     ->where($where)->select();
             if($result){
                 $re_msg['success'] = 1;
@@ -259,7 +260,8 @@ class Appointment extends Base
         $data['hallNo']     = input("hallno",0);
         $data['hallName']   = input("hallname",'');
         $data['queId']      = input("queid",0);
-        $data['despeakDate'] = input("date1",'');
+        $data['despeakDate'] = input("date1",0);
+        $data['despeakTime'] = strtotime($data['despeakDate']);
         $time1 = input("time1",'');
         $arr = explode('-', $time1);
         $data['time_Part_S'] = $arr[0].':00';
@@ -453,21 +455,36 @@ class Appointment extends Base
     public function manageSave(){
         $re_msg['success'] = 0;
         $re_msg['msg'] = '保存失败';
-        if (Request::instance()->isPost()){
-            $data = input();
-            if($data['password']!=$data['password1']){
+
+        if (Request::instance()->isPost()){     
+
+            $data['UserName'] = input("UserName","");
+            $data['FullName'] = input("FullName","");
+            $data['password'] = input("password",'');
+            $password1      = input("password1",'');
+            $group          = input("group_id",0);
+            $data['Sex']    = input("Sex","");
+            $data['BodNo']  = input("BodNo","");
+            $data['unitid'] = input("unitid","");
+            $data['hallid'] = input("hallid","");
+            $id             = input("id",0);
+            if($data['password'] != $password1){
                 $re_msg['msg'] = '两次输入的密码不一样';
                 echo json_encode($re_msg);exit;
             }
-            $group = input("group_id",'');
+            $validate = Loader::validate('Manage');
+            if (!$validate->check($data)) {
+                $re_msg['msg'] = $validate->getError();
+                echo json_encode($re_msg);exit;
+            }
+
             $uid = 0;
-            unset($data['password1']);
-            unset($data['group_id']);
+            $flag = 0;
             $data['password'] = md5($data['password']);
-            if($data['id']>0){            
-                $uid = $data['id'];
-                $where['UserId'] = $data['id'];
-                unset($data['id']);
+            if($id>0){            
+                $uid = $id;
+                $where['UserId'] = $id;
+
                 $flag = db("manager")->where($where)->update($data);
                 $flag2 = db("auth_group_access")->where("uid",$where['UserId'])->delete();
                 if($flag || $flag2){
@@ -477,8 +494,9 @@ class Appointment extends Base
                     $re_msg['msg'] = '更新失败';
                 }
             }else{
-                unset($data['id']);
+
                 $rs = db("manager")->where("UserName",input("UserName"))->find();
+
                 if($rs){
                     $re_msg['msg'] = '用户名已存在,请更换';
                 }else{                    
@@ -491,7 +509,7 @@ class Appointment extends Base
                     }
                 }
             }
-            if(!empty($group)){
+            if(!empty($group) && $flag){
                 $arr['uid'] = $uid;
                 $arr['group_id'] = $group;                
                 $rs = db("auth_group_access")->insert($arr);

@@ -29,6 +29,8 @@ function gettime() {
 			      	str += '</label>';
 				}
 				$("#checktime").html(str);
+			}else{
+				$("#checktime").html('<div class="weui-form-preview"><div class="weui-form-preview__ft"><a class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;">没有查询到数据</a></div></div>');
 			}
 		},'json')
 }
@@ -56,10 +58,10 @@ function markSave(){
 {/block}
 {block name="content"}
 	<!-- <header class='demos-header'>
-     <h1 class="demos-title">表单</h1>
+     <h3 class="demos-title">表单</h3>
     </header> -->
-    <div class="weui-cells__title">填写下面内容</div>
     <form>
+    <div class="weui-cells__title" style="padding-top: 2rem;">{$list.UnitName}》{$list.HallName}》{$list.QueName}</div>
     <div class="weui-cells weui-cells_form">
         <div class="weui-cell">
           <div class="weui-cell__hd"><label class="weui-label">身份证号：</label></div>
@@ -93,6 +95,7 @@ function markSave(){
     <div class="weui-cells__title">确认完成</div>
     <input type="hidden" name="QueId" value="{$list.QueId}">
     <input type="hidden" name="HallNo" value="{$list.HallNo}">
+    <input type="hidden" name="unitId" value="{$list.UnitId}">
     </form>
     <div class="weui-btn-area">
       <a class="weui-btn weui-btn_primary" href="javascript:markSave();" id="showTooltips">确定</a>

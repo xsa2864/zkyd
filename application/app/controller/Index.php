@@ -8,9 +8,15 @@ class Index extends Common
 {
     public function index()
     {
-    
-    	$content = "福州中科易达计算机技术有限公司成立于2008年，注册资金801万，是一家集计算机相关软、硬件产品研发、销售与服务为一体的科技创新型企业。几年以来，公司本着“诚信为本、科技创新、以质为本”的企业宗旨，经过全体员工的不懈努力，与广大客户的大力支持下，公司的产品与服务在全国范围得到了广泛的应用于发展，赢得了业界的一致好评与信任！ ";
-    	$this->assign("content",$content);
+    	$where['id'] = ['in',('1,2')];
+    	$where['status'] = 1;
+    	$result = db("ads")->where($where)->order("type asc")->select();
+    	
+    	$list1 = isset($result[0])?json_decode($result[0]['attr'],1):array();
+    	$list2 = isset($result[1])?json_decode($result[1]['attr'],1):array();
+    	
+    	$this->assign("list1",$list1);
+    	$this->assign("list2",$list2);
         return $this->fetch('index');
     }
 }
