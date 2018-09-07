@@ -51,6 +51,7 @@ class Ads extends Base
 
     	$id = input("id",0);
     	$data['title']  = input("title","");
+        $data['type']   = input("type",0);
     	$pic            = input("pic/a","");
     	$url            = input("url/a","");
     	$data['status'] = input("status",0);
@@ -160,7 +161,7 @@ class Ads extends Base
         // 获取表单上传文件 例如上传了001.jpg
         $file = request()->file('image');
         // 移动到框架应用根目录/public/uploads/ 目录下
-        $info = $file->validate(['size'=>156780,'ext'=>'jpg,png,gif'])->move(ROOT_PATH . 'public' . DS . 'uploads' . DS . 'ads');
+        $info = $file->validate(['size'=>506780,'ext'=>'jpg,png,gif'])->move(ROOT_PATH . 'public' . DS . 'uploads' . DS . 'ads');
         if($info){
             $re_msg['success'] = 1;
             $re_msg['msg']  =  $info->getSaveName(); 

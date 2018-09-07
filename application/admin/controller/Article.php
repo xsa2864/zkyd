@@ -29,14 +29,12 @@ class Article extends Base
     {    
     	$id = input("id",0);
     	$where = array();
-    	$wh = array();
         if($this->userid!=1){
             $where['unitid'] = $this->unitid;
-            $wh['unitid'] = $this->unitid;
         }
     	$where['id'] = $id;
     	$result = db("article")->where($where)->find();
-    	$cate = db("article_cate")->where($wh)->select();
+    	$cate = db("article_cate")->where("unitid",0)->select();
     	$this->assign("cate",$cate);
     	$this->assign("list",$result);
     	return $this->fetch('articleEdit');

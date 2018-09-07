@@ -13,7 +13,7 @@ function select() {
 			if(data.success==1){
 				var da = data.msg;
 				var str = '';
-				for(x in da){
+				for(x in da){ 
 					var mobile = da[x].mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
 					var idcard = da[x].idcard.replace(/(\d{6})\d{8}(\d{3})([0-9A-Za-z]{1})/, '$1*******$2$3');
 					var status = da[x].status==1?'取消预约':(da[x].status==0?'已取消':'已完成');

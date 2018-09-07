@@ -6,6 +6,7 @@ use think\Request;
 use think\Db;
 use think\Loader;
 use think\Cache;
+use think\Cookie;
 
 class Hall extends Common
 {
@@ -13,6 +14,9 @@ class Hall extends Common
     public function list()
     {
         $unitid = input("unitid",0);
+        if(Cookie::has('unitid') && $unitid==0){
+            $unitid = Cookie::get('unitid');
+        }
         $pageNum = 10;
         $where = array();
         if($unitid){
@@ -217,6 +221,9 @@ class Hall extends Common
         $idcard = input("idcard",'');
         $mobile = input("mobile",'');
         $status = input("status",'');
+        if(Cookie::has('unitid')){
+            $where['d.unitId'] = Cookie::get('unitid');
+        }
         $where = array();
         if(!empty($idcard)){
             $where['d.idcard'] = $idcard;
